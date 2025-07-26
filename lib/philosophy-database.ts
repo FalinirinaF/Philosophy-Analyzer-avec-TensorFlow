@@ -1,0 +1,92 @@
+import type { PhilosophicalConcept } from "./types"
+
+export const philosophicalConcepts: PhilosophicalConcept[] = [
+  {
+    name: "Liberté",
+    definition: "Capacité d'agir selon sa volonté, sans contrainte extérieure",
+    examples: ["libre arbitre", "autonomie morale", "émancipation politique"],
+    relatedPhilosophers: ["Sartre", "Kant", "Rousseau", "Spinoza"],
+    keywords: ["libre", "liberté", "autonomie", "choix", "volonté", "contrainte"],
+  },
+  {
+    name: "Vérité",
+    definition: "Conformité de la pensée avec la réalité ou cohérence logique",
+    examples: ["vérité scientifique", "vérité révélée", "relativisme"],
+    relatedPhilosophers: ["Platon", "Descartes", "Nietzsche", "Popper"],
+    keywords: ["vrai", "vérité", "réalité", "connaissance", "certitude", "doute"],
+  },
+  {
+    name: "Justice",
+    definition: "Principe moral fondé sur l'équité et le respect du droit",
+    examples: ["justice distributive", "justice pénale", "égalité"],
+    relatedPhilosophers: ["Aristote", "Rawls", "Platon", "Rousseau"],
+    keywords: ["juste", "justice", "équité", "droit", "égalité", "loi"],
+  },
+  {
+    name: "Bonheur",
+    definition: "État de satisfaction complète et durable",
+    examples: ["hédonisme", "eudémonisme", "ataraxie"],
+    relatedPhilosophers: ["Aristote", "Épicure", "Mill", "Schopenhauer"],
+    keywords: ["bonheur", "plaisir", "satisfaction", "bien-être", "joie"],
+  },
+  {
+    name: "Conscience",
+    definition: "Connaissance immédiate que l'esprit a de ses états et de ses actes",
+    examples: ["conscience morale", "conscience de soi", "inconscient"],
+    relatedPhilosophers: ["Descartes", "Freud", "Sartre", "Bergson"],
+    keywords: ["conscience", "esprit", "pensée", "réflexion", "moral"],
+  },
+  {
+    name: "Autrui",
+    definition: "L'autre personne considérée dans sa différence et sa similitude",
+    examples: ["reconnaissance", "altérité", "empathie"],
+    relatedPhilosophers: ["Levinas", "Sartre", "Hegel", "Rousseau"],
+    keywords: ["autrui", "autre", "relation", "reconnaissance", "empathie"],
+  },
+  {
+    name: "Devoir",
+    definition: "Obligation morale qui s'impose à la conscience",
+    examples: ["impératif catégorique", "obligation", "responsabilité"],
+    relatedPhilosophers: ["Kant", "Jonas", "Levinas", "Sartre"],
+    keywords: ["devoir", "obligation", "moral", "responsabilité", "impératif"],
+  },
+  {
+    name: "Temps",
+    definition: "Dimension dans laquelle se succèdent les événements",
+    examples: ["durée", "éternité", "temporalité"],
+    relatedPhilosophers: ["Bergson", "Heidegger", "Augustin", "Kant"],
+    keywords: ["temps", "durée", "temporel", "éternité", "instant"],
+  },
+  {
+    name: "Art",
+    definition: "Création d'œuvres à visée esthétique ou expressive",
+    examples: ["beauté", "création", "esthétique"],
+    relatedPhilosophers: ["Kant", "Hegel", "Benjamin", "Adorno"],
+    keywords: ["art", "beauté", "esthétique", "création", "œuvre"],
+  },
+  {
+    name: "Travail",
+    definition: "Activité humaine de transformation de la nature",
+    examples: ["aliénation", "technique", "production"],
+    relatedPhilosophers: ["Marx", "Hegel", "Arendt", "Simmel"],
+    keywords: ["travail", "technique", "production", "aliénation", "activité"],
+  },
+]
+
+export const randomSubjects = [
+  "La liberté est-elle une illusion ?",
+  "Peut-on dire que la vérité est relative ?",
+  "La justice n'est-elle qu'un rapport de force ?",
+  "Le bonheur est-il le but de l'existence ?",
+  "Sommes-nous responsables de nos actes inconscients ?",
+  "Autrui est-il un obstacle à ma liberté ?",
+  "Y a-t-il des devoirs envers soi-même ?",
+  "Le temps nous appartient-il ?",
+  "L'art nous éloigne-t-il de la réalité ?",
+  "Le travail libère-t-il l'homme ?",
+  "Faut-il avoir peur de la mort ?",
+  "La technique nous rend-elle plus libres ?",
+  "Peut-on vivre sans croyances ?",
+  "L'État limite-t-il la liberté ?",
+  "La culture nous humanise-t-elle ?",
+]

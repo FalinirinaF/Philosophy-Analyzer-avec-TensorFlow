@@ -10,6 +10,7 @@ import { BookOpen, Brain, FileText, Download, Shuffle } from "lucide-react"
 import { analyzePhilosophicalSubject, generateRandomSubject } from "@/lib/philosophy-analyzer"
 import { exportToPDF } from "@/lib/pdf-export"
 import type { AnalysisResult } from "@/lib/types"
+import { ExerciseSection } from "@/components/exercise-section"
 
 export default function PhilosophyAnalyzer() {
   const [subject, setSubject] = useState("")
@@ -47,7 +48,7 @@ export default function PhilosophyAnalyzer() {
         <div className="text-center space-y-2">
           <h1 className="text-4xl font-bold text-gray-900 flex items-center justify-center gap-2">
             <Brain className="h-8 w-8 text-indigo-600" />
-            Philosophy Analyzer
+            Exo Philos
           </h1>
           <p className="text-lg text-gray-600">Analyseur intelligent de sujets de dissertation philosophique</p>
           <p className="text-sm text-gray-500">Destiné aux élèves de Première et Terminale</p>
@@ -192,6 +193,9 @@ export default function PhilosophyAnalyzer() {
             </div>
           </div>
         )}
+
+        {/* Interactive Exercises */}
+        {analysis && <ExerciseSection subject={subject} analysis={analysis} />}
       </div>
     </div>
   )

@@ -10,7 +10,7 @@ export function exportToPDF(subject: string, analysis: AnalysisResult) {
   doc.setFontSize(16)
 
   // Titre
-  doc.text("Analyse de dissertation philosophique", 20, yPosition)
+  doc.text("Exo Philos - Analyse de dissertation philosophique", 20, yPosition)
   yPosition += 15
 
   // Sujet
@@ -133,7 +133,7 @@ export function exportToPDF(subject: string, analysis: AnalysisResult) {
     doc.setPage(i)
     doc.setFont("helvetica", "normal")
     doc.setFontSize(10)
-    doc.text(`PhiloAnalyzer - Page ${i}/${pageCount}`, 20, 285)
+    doc.text(`Exo Philos - Page ${i}/${pageCount}`, 20, 285)
     doc.text(new Date().toLocaleDateString("fr-FR"), 150, 285)
   }
 

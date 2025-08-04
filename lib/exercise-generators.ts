@@ -7,6 +7,7 @@ import type {
   ProblematizationExerciseData,
   ArgumentBuilderExerciseData,
 } from "./types"
+import { getCitationsByTheme } from "./philosophical-citations"
 
 export function generateQuizQuestions(analysis: AnalysisResult): QuizQuestion[] {
   const questions: QuizQuestion[] = []
@@ -31,6 +32,22 @@ export function generateQuizQuestions(analysis: AnalysisResult): QuizQuestion[] 
       options: [correctPhilosopher, ...otherPhilosophers.slice(0, 3)].sort(() => Math.random() - 0.5),
       correctAnswer: 0,
       explanation: `${correctPhilosopher} a développé des réflexions importantes sur ${analysis.mainTheme.toLowerCase()}.`,
+    })
+  }
+
+  // Question sur une citation célèbre
+  const themeCitations = getCitationsByTheme(analysis.mainTheme)
+  if (themeCitations.length > 0) {
+    const citation = themeCitations[0]
+    const otherAuthors = ["Platon", "Kant", "Hume", "Spinoza"].filter((a) => a !== citation.author)
+
+    questions.push({
+      question: `Qui a écrit : "${citation.text}" ?`,
+      options: [citation.author, ...otherAuthors.slice(0, 3)].sort(() => Math.random() - 0.5),
+      correctAnswer: 0,
+      explanation:
+        citation.explanation ||
+        `Cette citation de ${citation.author} exprime une conception importante de ${analysis.mainTheme.toLowerCase()}.`,
     })
   }
 
@@ -62,16 +79,6 @@ export function generateQuizQuestions(analysis: AnalysisResult): QuizQuestion[] 
       "La synthèse vise à dépasser l'opposition entre thèse et antithèse en proposant une solution nouvelle.",
   })
 
-  // Question sur les concepts
-  if (analysis.keyConcepts.length > 1) {
-    questions.push({
-      question: `Parmi ces notions, lesquelles sont liées au sujet analysé ?`,
-      options: [analysis.keyConcepts.slice(0, 2).join(" et "), "Temps et espace", "Matière et forme", "Cause et effet"],
-      correctAnswer: 0,
-      explanation: `Ces notions sont directement liées aux enjeux philosophiques du sujet.`,
-    })
-  }
-
   return questions.slice(0, 5) // Limiter à 5 questions
 }
 
@@ -96,6 +103,10 @@ export function generatePhilosopherMatchExercise(analysis: AnalysisResult): Phil
     Nietzsche: ["Valeurs", "Volonté", "Critique"],
     Rousseau: ["Nature", "Société", "Contrat"],
     Spinoza: ["Liberté", "Nécessité", "Éthique"],
+    Marx: ["Travail", "Société", "Histoire"],
+    Heidegger: ["Être", "Temps", "Technique"],
+    Freud: ["Inconscient", "Conscience", "Désir"],
+    Épicure: ["Bonheur", "Plaisir", "Mort"],
   }
 
   const availablePhilosophers = analysis.philosophers.slice(0, 4)
@@ -118,51 +129,38 @@ export function generatePhilosopherMatchExercise(analysis: AnalysisResult): Phil
 }
 
 export function generateCitationAnalysisExercise(analysis: AnalysisResult): CitationExerciseData {
-  const citationsByTheme = {
-    Liberté: [
-      {
-        text: "L'homme est condamné à être libre",
-        author: "Sartre",
-        themes: ["Liberté", "Existence", "Responsabilité"],
-        keywords: ["condamné", "libre", "existence", "choix"],
-        explanation:
-          "Sartre exprime ici que la liberté n'est pas un don mais une condition inévitable de l'existence humaine.",
-      },
-      {
-        text: "La liberté consiste à pouvoir faire tout ce qui ne nuit pas à autrui",
-        author: "Déclaration des droits de l'homme",
-        themes: ["Liberté", "Limite", "Autrui"],
-        keywords: ["liberté", "pouvoir", "autrui", "limite"],
-        explanation: "Cette définition juridique pose les limites sociales de la liberté individuelle.",
-      },
-    ],
-    Vérité: [
-      {
-        text: "Je pense, donc je suis",
-        author: "Descartes",
-        themes: ["Vérité", "Certitude", "Existence"],
-        keywords: ["pense", "suis", "certitude", "doute"],
-        explanation: "Le cogito cartésien établit la première vérité indubitable de la philosophie moderne.",
-      },
-    ],
-    Justice: [
-      {
-        text: "La justice est la première vertu des institutions sociales",
-        author: "Rawls",
-        themes: ["Justice", "Société", "Institution"],
-        keywords: ["justice", "vertu", "institution", "sociale"],
-        explanation: "Rawls place la justice au fondement de toute organisation sociale légitime.",
-      },
-    ],
+  // Récupérer les citations du thème principal
+  let citations = getCitationsByTheme(analysis.mainTheme)
+
+  // Si pas assez de citations pour ce thème, ajouter des citations aléatoires
+  if (citations.length < 2) {
+    const additionalCitations = getCitationsByTheme("Liberté").concat(getCitationsByTheme("Vérité"))
+    citations = citations.concat(additionalCitations.slice(0, 2 - citations.length))
   }
 
-  const themeCitations = citationsByTheme[analysis.mainTheme] || citationsByTheme["Liberté"]
+  // Transformer les citations en format d'exercice
+  const exerciseCitations = citations.slice(0, 2).map((citation) => ({
+    text: citation.text,
+    author: citation.author,
+    themes: [citation.theme, ...analysis.keyConcepts.slice(0, 2)],
+    keywords: citation.text
+      .toLowerCase()
+      .split(" ")
+      .filter(
+        (word) =>
+          word.length > 3 && !["dans", "avec", "pour", "sans", "sous", "cette", "celui", "celle"].includes(word),
+      )
+      .slice(0, 5),
+    explanation:
+      citation.explanation || `Cette citation exprime une conception importante de ${citation.theme.toLowerCase()}.`,
+  }))
+
   const allThemes = Array.from(
     new Set([...analysis.keyConcepts, "Existence", "Société", "Nature", "Raison", "Expérience", "Morale"]),
   )
 
   return {
-    citations: themeCitations.slice(0, 2),
+    citations: exerciseCitations,
     availableThemes: allThemes,
   }
 }

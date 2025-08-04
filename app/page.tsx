@@ -6,33 +6,55 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { BookOpen, Brain, FileText, Download, Shuffle } from "lucide-react"
-import { analyzePhilosophicalSubject, generateRandomSubject } from "@/lib/philosophy-analyzer"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { BookOpen, Brain, FileText, Download, Shuffle, CheckCircle } from "lucide-react"
+import { apiClient, type AnalysisResponse } from "@/lib/api-client"
 import { exportToPDF } from "@/lib/pdf-export"
-import type { AnalysisResult } from "@/lib/types"
 import { ExerciseSection } from "@/components/exercise-section"
+import { CitationDisplay } from "@/components/citation-display"
 
 export default function PhilosophyAnalyzer() {
   const [subject, setSubject] = useState("")
-  const [analysis, setAnalysis] = useState<AnalysisResult | null>(null)
+  const [analysis, setAnalysis] = useState<AnalysisResponse | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleAnalyze = async () => {
     if (!subject.trim()) return
 
     setIsAnalyzing(true)
-    // Simulation d'un délai de traitement
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    setError(null)
 
-    const result = analyzePhilosophicalSubject(subject)
-    setAnalysis(result)
-    setIsAnalyzing(false)
+    try {
+      console.log("Début de l'analyse pour:", subject)
+      const result = await apiClient.analyzeSubject(subject)
+      console.log("Résultat de l'analyse:", result)
+      setAnalysis(result)
+    } catch (error) {
+      console.error("Erreur d'analyse:", error)
+      setError(error instanceof Error ? error.message : "Erreur inconnue lors de l'analyse")
+    } finally {
+      setIsAnalyzing(false)
+    }
   }
 
-  const handleRandomSubject = () => {
-    const randomSubject = generateRandomSubject()
-    setSubject(randomSubject)
-    setAnalysis(null)
+  const handleRandomSubject = async () => {
+    try {
+      const randomSubject = await apiClient.getRandomSubject()
+      setSubject(randomSubject)
+      setAnalysis(null)
+      setError(null)
+    } catch (error) {
+      console.error("Erreur de génération:", error)
+      // Fallback local
+      const fallbackSubjects = [
+        "La liberté est-elle une illusion ?",
+        "Peut-on dire que la vérité est relative ?",
+        "La justice n'est-elle qu'un rapport de force ?",
+        "Le bonheur est-il le but de l'existence ?",
+      ]
+      setSubject(fallbackSubjects[Math.floor(Math.random() * fallbackSubjects.length)])
+    }
   }
 
   const handleExportPDF = () => {
@@ -52,7 +74,30 @@ export default function PhilosophyAnalyzer() {
           </h1>
           <p className="text-lg text-gray-600">Analyseur intelligent de sujets de dissertation philosophique</p>
           <p className="text-sm text-gray-500">Destiné aux élèves de Première et Terminale</p>
+
+          {/* Status */}
+          <div className="flex items-center justify-center gap-2 text-sm">
+            <Badge variant="default" className="bg-green-500">
+              <CheckCircle className="h-3 w-3 mr-1" />
+              Analyse locale enrichie
+            </Badge>
+          </div>
         </div>
+
+        {/* Error Alert */}
+        {error && (
+          <Alert variant="destructive">
+            <AlertDescription>
+              {error}
+              <Button variant="link" className="p-0 h-auto ml-2" onClick={() => setError(null)}>
+                Fermer
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {/* Citation Display */}
+        <CitationDisplay />
 
         {/* Input Section */}
         <Card>
@@ -91,6 +136,20 @@ export default function PhilosophyAnalyzer() {
         {/* Results Section */}
         {analysis && (
           <div className="space-y-6">
+            {/* Confidence Score */}
+            {analysis.confidence && (
+              <Card className="border-green-200 bg-green-50">
+                <CardContent className="pt-4">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <span className="text-sm text-green-800">
+                      Analyse terminée avec {Math.round(analysis.confidence * 100)}% de confiance
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Theme and Key Concepts */}
             <Card>
               <CardHeader>
@@ -118,6 +177,9 @@ export default function PhilosophyAnalyzer() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Citations du thème */}
+            <CitationDisplay theme={analysis.mainTheme} />
 
             {/* Problematic */}
             <Card>

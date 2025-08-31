@@ -292,7 +292,8 @@ export default function Portfolio() {
                                   className="px-6 sm:px-8 py-3 text-base sm:text-lg rounded-lg border-gray-300 hover:bg-gray-50/80 dark:hover:bg-gray-800/80 bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm w-full sm:w-auto shadow-lg hover:shadow-xl transition-all duration-300"
                                   onClick={() =>
                                     window.open(
-                                      "https://drive.google.com/file/d/1lYwN0YDMYvRY07_oRmlA6Ii-8wfhmvXU/view?usp=sharing",
+                                      "https://drive.google.com/file/d/1lYwN0YDMYvRY07_oRmlA6Ii-8wfhmvXU/view?usp=drive_link",
+                                      "_blank",
                                     )
                                   }
                                 >
